@@ -1,17 +1,17 @@
+import dotenv from 'dotenv';
+import path from 'path';
+dotenv.config();
+dotenv.config({ path: path.join(__dirname, '../../.env') });
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
-import path from 'path';
-import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import routes from './routes';
 import { errorHandler } from './middleware/errorHandler';
-
-dotenv.config();
-dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const app = express();
 
