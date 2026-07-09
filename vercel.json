@@ -4,5 +4,11 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ]
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://neondb_owner:npg_sJwo2O0AuqrE@ep-silent-lake-at7ie3az.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require",
+    "JWT_SECRET": "ayub-academic-os-super-secret-jwt-key-2024",
+    "JWT_REFRESH_SECRET": "ayub-academic-os-refresh-secret-key-2024",
+    "NODE_ENV": "production"
+  }
 }
