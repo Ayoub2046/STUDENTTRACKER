@@ -15,5 +15,8 @@
   ],
   "categories": ["education", "productivity"],
   "lang": "en",
-  "scope": "/"
+  "scope": "/",
+  "screenshots": [],
+  "prefer_related_applications": false,
+  "display_override": ["window-controls-overlay", "standalone"]
 }

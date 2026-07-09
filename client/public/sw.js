@@ -1,42 +1,44 @@
-const CACHE_NAME = 'ayub-os-v1'
-const STATIC_ASSETS = ['/', '/manifest.json', '/icons/icon-192.svg']
+const CACHE = 'ayub-os-v1'
+const STATIC = ['/', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png', '/sw.js']
 
-self.addEventListener('install', (event: any) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
-  )
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)))
   self.skipWaiting()
 })
 
-self.addEventListener('activate', (event: any) => {
-  event.waitUntil(
-    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
   )
   self.clients.claim()
 })
 
-self.addEventListener('fetch', (event: any) => {
-  if (event.request.method !== 'GET') return
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      const fetchPromise = fetch(event.request).then(response => {
-        if (response && response.status === 200) {
-          const clone = response.clone()
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone))
+self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return
+  if (e.request.url.includes('/api/')) {
+    e.respondWith(fetch(e.request).catch(() => new Response(JSON.stringify({ error: 'Offline' }), { status: 503 })))
+    return
+  }
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      const fetched = fetch(e.request).then(res => {
+        if (res.ok) {
+          const clone = res.clone()
+          caches.open(CACHE).then(c => c.put(e.request, clone))
         }
-        return response
+        return res
       }).catch(() => cached)
-      return cached || fetchPromise
+      return cached || fetched
     })
   )
 })
 
-self.addEventListener('push', (event: any) => {
-  const data = event.data?.json() || { title: 'AYUB OS', body: 'You have a new notification' }
+self.addEventListener('push', (e) => {
+  const data = e.data?.json() || { title: 'AYUB OS', body: '' }
   self.registration.showNotification(data.title, {
     body: data.body,
-    icon: '/icons/icon-192.svg',
-    badge: '/icons/icon-192.svg',
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
     vibrate: [200, 100, 200]
   })
 })

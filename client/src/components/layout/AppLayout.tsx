@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
+import { InstallPWA } from '@/components/InstallPWA'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -19,6 +20,7 @@ export function AppLayout() {
           <Outlet />
         </main>
       </div>
+      <InstallPWA />
     </div>
   )
 }
